@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 @RestController // 标注当前类为 RESTful 风格的控制层组件，响应 JSON 数
 @RequestMapping("/user")// 设置基础请求路径，所有接口都以 /user 开头
 public class UserController {
-    @Autowired// 自动注入 Spring 容器中的 UserService Bean
+    @Autowired
     private UserService userService;
-//    @Autowired
-//    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @PostMapping("/register")
     public Result register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$")String password) {
             //查询用户
@@ -52,9 +52,8 @@ public class UserController {
             claims.put("id",u.getId());
             claims.put("username",u.getUsername());
             String token = JwtUtil.getToken(claims);
-            //将token存入redis里面
-//            stringRedisTemplate.opsForValue().set(token,token, 1 ,TimeUnit.HOURS);
-            return Result.success( token);
+            stringRedisTemplate.opsForValue().set(token, token, 1, TimeUnit.HOURS);
+            return Result.success(token);
         }
         return Result.error("密码错误");
     }
@@ -95,9 +94,7 @@ public class UserController {
         if(!new_pwd.equals(re_pwd))
             return Result.error("两次密码不一致");
         userService.updatePwd(new_pwd);
-        //删除 Redis里面的token
-//        ValueOperations<String, String> Operations = stringRedisTemplate.opsForValue();
-//        Operations.getOperations().delete(token);
+        stringRedisTemplate.delete(token);
         return Result.success();
     }
 }

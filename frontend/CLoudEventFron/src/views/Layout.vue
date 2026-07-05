@@ -44,7 +44,7 @@ onMounted(() => {
 <template>
   <el-container class="layout-container">
     <el-aside :width="isCollapse ? '64px' : '220px'" class="aside">
-      <div class="logo">{{ isCollapse ? 'BE' : 'BigEvent' }}</div>
+      <div class="logo">{{ isCollapse ? 'CE' : 'CloudEvent' }}</div>
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"

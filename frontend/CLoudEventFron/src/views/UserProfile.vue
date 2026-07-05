@@ -65,20 +65,35 @@ const handleUpdateInfo = async () => {
 const handleUploadAvatar = async () => {
   const input = document.createElement('input')
   input.type = 'file'
-  input.accept = 'image/*'
+  input.accept = 'image/jpeg,image/png'
   input.onchange = async (e) => {
     const file = e.target.files[0]
     if (!file) return
-    if (file.size > 2 * 1024 * 1024) {
-      ElMessage.error('图片不能超过2MB')
+    if (!/^image\/(jpeg|png)$/.test(file.type)) {
+      ElMessage.error('仅支持 JPG/PNG 格式')
       return
     }
-    const form = new FormData()
-    form.append('file', file)
-    const res = await request.post('/upload', form)
-    await updateAvatar(res.data)
-    await userStore.fetchUser()
-    ElMessage.success('头像更新成功')
+    if (file.size > 2 * 1024 * 1024) {
+      ElMessage.error('图片大小不能超过2MB')
+      return
+    }
+    const img = new Image()
+    img.onload = async () => {
+      if (img.width > 200 || img.height > 200) {
+        ElMessage.error('图片尺寸过大，请使用不超过 200×200 的图片')
+        return
+      }
+      const form = new FormData()
+      form.append('file', file)
+      const res = await request.post('/upload', form)
+      await updateAvatar(res.data)
+      await userStore.fetchUser()
+      ElMessage.success('头像更新成功')
+    }
+    img.onerror = () => {
+      ElMessage.error('图片加载失败，请选择有效的图片文件')
+    }
+    img.src = URL.createObjectURL(file)
   }
   input.click()
 }
@@ -118,6 +133,7 @@ onMounted(initInfo)
           <div class="avatar-section">
             <el-avatar :size="120" :src="userStore.user?.userPic" />
             <el-button type="primary" @click="handleUploadAvatar" style="margin-top:20px">更换头像</el-button>
+            <span class="avatar-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 200×200</span>
           </div>
         </el-tab-pane>
         <el-tab-pane label="修改密码" name="pwd">
@@ -157,5 +173,10 @@ onMounted(initInfo)
   flex-direction: column;
   align-items: center;
   padding: 60px 0;
+}
+.avatar-hint {
+  font-size: 12px;
+  color: #999;
+  margin-top: 10px;
 }
 </style>

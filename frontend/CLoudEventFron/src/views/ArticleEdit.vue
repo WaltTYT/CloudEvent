@@ -38,19 +38,34 @@ const fetchCategories = async () => {
 const handleFileSelect = async (e) => {
   const file = e.target.files[0]
   if (!file) return
-  if (file.size > 2 * 1024 * 1024) {
-    ElMessage.error('图片不能超过2MB')
+  if (!/^image\/(jpeg|png)$/.test(file.type)) {
+    ElMessage.error('仅支持 JPG/PNG 格式')
     return
   }
-  uploading.value = true
-  try {
-    const res = await uploadFile(file)
-    previewUrl.value = URL.createObjectURL(file)
-    form.value.coverImg = res.data
-  } finally {
-    uploading.value = false
-    fileInput.value.value = ''
+  if (file.size > 2 * 1024 * 1024) {
+    ElMessage.error('图片大小不能超过2MB')
+    return
   }
+  const img = new Image()
+  img.onload = async () => {
+    if (img.width > 800 || img.height > 450) {
+      ElMessage.error('图片尺寸过大，请使用不超过 800×450 的图片')
+      return
+    }
+    uploading.value = true
+    try {
+      const res = await uploadFile(file)
+      previewUrl.value = URL.createObjectURL(file)
+      form.value.coverImg = res.data
+    } finally {
+      uploading.value = false
+      fileInput.value.value = ''
+    }
+  }
+  img.onerror = () => {
+    ElMessage.error('图片加载失败，请选择有效的图片文件')
+  }
+  img.src = URL.createObjectURL(file)
 }
 
 const handleSubmit = async () => {
@@ -81,11 +96,11 @@ onMounted(() => {
         </el-form-item>
         <el-form-item label="封面图片">
           <div class="cover-upload">
-            <input ref="fileInput" type="file" accept="image/*" @change="handleFileSelect" class="file-input" />
+            <input ref="fileInput" type="file" accept="image/jpeg,image/png" @change="handleFileSelect" class="file-input" />
             <el-button type="primary" :loading="uploading" @click="fileInput.click()">
               选择图片
             </el-button>
-            <span class="file-hint">支持 JPG / PNG 格式，不超过 2MB</span>
+            <span class="file-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 800×450</span>
           </div>
           <img v-if="previewUrl" :src="previewUrl" class="cover-preview" />
         </el-form-item>

@@ -26,6 +26,7 @@ public class Article {
     private Integer categoryId;//文章分类id
     private String categoryName;//文章分类名称（联表查询）
     private Integer createUser;//创建人ID
+    private String authorName;//作者名称（联表查询）
     private LocalDateTime createTime;//创建时间
     private LocalDateTime updateTime;//更新时间
 }

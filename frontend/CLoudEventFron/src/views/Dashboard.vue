@@ -43,7 +43,7 @@ onMounted(fetchStats)
     <el-card class="welcome-card">
       <div class="welcome">
         <h1>欢迎回来，{{ userStore.user?.username || '用户' }}</h1>
-        <p>欢迎使用 BigEvent 文章管理系统</p>
+        <p>欢迎使用 CloudEvent 文章管理系统</p>
       </div>
     </el-card>
     <el-row :gutter="20" class="cards">
@@ -77,6 +77,7 @@ onMounted(fetchStats)
       <template #header>看一看</template>
       <el-table :data="publishedArticles" stripe empty-text="暂无已发布文章">
         <el-table-column prop="title" label="标题" min-width="200" />
+        <el-table-column prop="authorName" label="作者" width="100" />
         <el-table-column prop="categoryName" label="分类" width="120" />
         <el-table-column prop="createTime" label="发布时间" width="180" />
         <el-table-column label="操作" width="80">
@@ -91,6 +92,7 @@ onMounted(fetchStats)
       <div v-loading="previewLoading" class="preview-body">
         <h2 class="preview-title">{{ previewArticle?.title }}</h2>
         <div class="preview-meta">
+          <span>作者：{{ previewArticle?.authorName || '—' }}</span>
           <span>分类：{{ previewArticle?.categoryName || '—' }}</span>
           <el-tag size="small" type="success">已发布</el-tag>
         </div>

@@ -21,7 +21,7 @@ public interface ArticleMapper {
     //查询所有已发布文章（不按用户过滤）
     List<Article> listPublished(Integer categoryId);
 
-    @Select("select a.*, c.category_name as categoryName from article a left join category c on a.category_id = c.id where a.id=#{id}")
+    @Select("select a.*, c.category_name as categoryName, u.nickname as authorName from article a left join category c on a.category_id = c.id left join user u on a.create_user = u.id where a.id=#{id}")
     Article findById(Integer id);
 
     @Update("update article set state=#{state},update_time=now() where id=#{id}")

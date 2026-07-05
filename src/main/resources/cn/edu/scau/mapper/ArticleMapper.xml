@@ -20,9 +20,10 @@
     </select>
 
     <select id="listPublished" resultType="cn.edu.scau.pojo.Article">
-        select a.*, c.category_name as categoryName
+        select a.*, c.category_name as categoryName, u.nickname as authorName
         from article a
         left join category c on a.category_id = c.id
+        left join user u on a.create_user = u.id
         <where>
             <if test="categoryId!=null">
                 and a.category_id=#{categoryId}
