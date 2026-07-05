@@ -17,9 +17,8 @@ public class Article {
     private String title;//文章标题
     @NotEmpty
     private String content;//文章内容
-    @NotEmpty
-    @URL
-    private String coverImg;//封面图像
+    @Pattern(regexp = "^$|https?://[\\w\\-.]+(:\\d+)?(/[\\w\\-.]*)*/?.*$")
+    private String coverImg;//封面图像（可选）
     @State
     private String state;//发布状态 已发布|草稿
     @NotNull

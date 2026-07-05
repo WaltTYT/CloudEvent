@@ -48,8 +48,8 @@ const handleFileSelect = async (e) => {
   }
   const img = new Image()
   img.onload = async () => {
-    if (img.width > 800 || img.height > 450) {
-      ElMessage.error('图片尺寸过大，请使用不超过 800×450 的图片')
+    if (img.width > 1600 || img.height > 900) {
+      ElMessage.error('图片尺寸过大，请使用不超过 1600×900 的图片')
       return
     }
     uploading.value = true
@@ -100,7 +100,7 @@ onMounted(() => {
             <el-button type="primary" :loading="uploading" @click="fileInput.click()">
               选择图片
             </el-button>
-            <span class="file-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 800×450</span>
+            <span class="file-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 1600×900</span>
           </div>
           <img v-if="previewUrl" :src="previewUrl" class="cover-preview" />
         </el-form-item>
