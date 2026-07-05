@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/big_event
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: localhost
+      port: 6379
+# 新增/修改服务器端口配置
+server:
+  port: 8080  # 替换为未被占用的端口（如8081、8090、9090等）
+
+mybatis:
+  configuration:
+     map-underscore-to-camel-case: true #驼峰命名和下划线命名的转换
+     mapper-locations: classpath:cn/edu/scau/mapper/*.xml
