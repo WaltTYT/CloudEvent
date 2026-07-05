@@ -18,10 +18,10 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     proxy: {
-      '/user': 'http://localhost:8080',
-      '/category': 'http://localhost:8080',
-      '/article': 'http://localhost:8080',
-      '/upload': 'http://localhost:8080',
+      '/user': 'http://localhost:8081',
+      '/category': 'http://localhost:8081',
+      '/article': 'http://localhost:8081',
+      '/upload': 'http://localhost:8081',
     }
   }
 })

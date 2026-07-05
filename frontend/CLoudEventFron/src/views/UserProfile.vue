@@ -79,8 +79,8 @@ const handleUploadAvatar = async () => {
     }
     const img = new Image()
     img.onload = async () => {
-      if (img.width > 200 || img.height > 200) {
-        ElMessage.error('图片尺寸过大，请使用不超过 200×200 的图片')
+      if (img.width > 1500 || img.height > 1500) {
+        ElMessage.error('图片尺寸过大，请使用不超过 1500×1500 的图片')
         return
       }
       const form = new FormData()
@@ -133,7 +133,7 @@ onMounted(initInfo)
           <div class="avatar-section">
             <el-avatar :size="120" :src="userStore.user?.userPic" />
             <el-button type="primary" @click="handleUploadAvatar" style="margin-top:20px">更换头像</el-button>
-            <span class="avatar-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 200×200</span>
+            <span class="avatar-hint">支持 JPG / PNG 格式，大小不超过 2MB，建议尺寸 1500×1500</span>
           </div>
         </el-tab-pane>
         <el-tab-pane label="修改密码" name="pwd">
