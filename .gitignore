@@ -37,3 +37,15 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Application Data ###
+Repo/
+
+### Frontend ###
+frontend/CLoudEventFron/node_modules/
+frontend/CLoudEventFron/dist/
+frontend/CLoudEventFron/.env.local
+
+### Logs ###
+*.log
+logs/
