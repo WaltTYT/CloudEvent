@@ -23,11 +23,12 @@ CloudEvent - 云事件管理系统
 | 构建工具 | Vite | 8.0.8 |
 | HTTP客户端 | Axios | 1.16.1 |
 | 图表 | ECharts | 6.1.0 |
+| 反向代理 | Nginx | 1.20.2 |
 
 ### 1.3 架构
 - **模式**: 基于 Spring Cloud Alibaba 的微服务架构
 - **部署**: 使用 Nacos 进行服务发现和配置管理
-- **通信**: 前端与后端通过 RESTful API 进行通信
+- **通信**: 前端与后端通过 RESTful API 进行通信，Nginx 作为反向代理和静态资源服务器
 - **数据库**: MySQL 作为主数据库，Redis 用于缓存
 
 ---
@@ -171,18 +172,49 @@ CloudEvent - 云事件管理系统
 - MySQL (localhost:3306)
 - Redis (localhost:6379)
 - Nacos (localhost:8848)
+- Nginx (localhost:80)
 
 ### 7.2 后端
 ```bash
 mvn spring-boot:run
 ```
 
-### 7.3 前端
+### 7.3 前端开发模式
 ```bash
 cd frontend/CLoudEventFron
 npm install
 npm run dev
 ```
+
+### 7.4 前端生产构建
+```bash
+cd frontend/CLoudEventFron
+npm run build
+```
+
+### 7.5 Nginx 配置
+- **配置文件**: `D:\Development\Java\Development\nginx-1.20.2\conf\nginx.conf`
+- **静态文件目录**: `D:/study/JavaStudy/SpringBootStudy/CloudEvent/frontend/CLoudEventFron/dist`
+- **图片存储目录**: `D:/study/JavaStudy/SpringBootStudy/CloudEvent/Repo`
+- **API 代理**: `/user/`, `/category/`, `/article/`, `/upload/` → `http://localhost:8081`
+
+### 7.6 Nginx 命令
+```bash
+cd D:\Development\Java\Development\nginx-1.20.2
+
+# 启动
+.\nginx.exe
+
+# 停止
+.\nginx.exe -s stop
+
+# 重新加载配置
+.\nginx.exe -s reload
+```
+
+### 7.7 访问地址
+- **前端页面**: http://localhost
+- **后端 API**: http://localhost/user/***, http://localhost/article/*** 等
 
 ---
 
@@ -190,8 +222,27 @@ npm run dev
 
 - **远程仓库**: GitHub (https://github.com/WaltTYT/CloudEvent)
 - **分支**: main
-- **提交信息**: 使用约定式提交（例如 `add(feature): description`）
 - **推送**: 需要明确获得用户许可才能推送
+
+### 8.1 提交格式规范
+
+| 类型 | 格式 | 说明 | 示例 |
+|------|------|------|------|
+| 初始化项目 | `init(模块 : 初始化描述)` | 初始化项目结构、配置文件 | `init(all : 初始化默认模板文件)` |
+| 增加功能 | `add(模块 : 功能描述)` | 添加新功能、新依赖、新文件 | `add(后端 : 添加nacos)` |
+| 修复bug | `fix(模块 : 修复描述)` | 修复问题、修正错误 | `fix(前端 : 修复图片尺寸限制)` |
+| 删除内容 | `delete(模块 : 删除描述)` | 删除文件、移除无用代码 | `delete(前端 : 删除默认模板文件)` |
+| 重构 | `refactor(模块 : 重构描述)` | 代码重构，不改变功能 | `refactor(后端 : 优化异常处理)` |
+| 文档 | `docs(模块 : 文档描述)` | 更新文档 | `docs(Agent.md : 更新提交格式规范)` |
+
+### 8.2 提交格式规则
+
+1. **模块标识**: 使用 `后端`、`前端`、`all` 或具体模块名
+2. **分隔符**: 使用 `:` 分隔模块和描述，两侧各有一个空格
+3. **多提交**: 使用 `&&` 连接多个提交类型，前后各有一个空格
+4. **示例**:
+   - 单个提交: `add(后端 : 添加redis)`
+   - 多个提交: `add(后端 : 添加nacos) && fix(前端 : 图片尺寸大小修改)`
 
 ---
 
@@ -199,7 +250,9 @@ npm run dev
 
 1. **SSL 验证**: 由于证书问题，GitHub 操作已禁用 SSL 验证
 2. **数据库**: 使用 MySQL 数据库，库名 `big_event`
-3. **端口**: 后端运行在端口 8081
+3. **端口**: 后端运行在端口 8081，Nginx 运行在端口 80
+4. **文件路径**: 图片存储路径为 `D:\study\JavaStudy\SpringBootStudy\CloudEvent\Repo`
+5. **Nginx**: 作为反向代理和静态资源服务器，配置文件位于 `D:\Development\Java\Development\nginx-1.20.2\conf\nginx.conf`
 
 ---
 
