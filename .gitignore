@@ -49,3 +49,7 @@ frontend/CLoudEventFron/.env.local
 ### Logs ###
 *.log
 logs/
+
+### Temporary Files ###
+plan.md
+gateway-error.txt
