@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.scau.article.mapper.ArticleMapper">
+    <select id="list" resultType="cn.edu.scau.pojo.Article">
+        select * from article
+        <where>
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+            and create_user=#{userId}
+        </where>
+    </select>
+
+    <select id="listPublished" resultType="cn.edu.scau.pojo.Article">
+        select * from article
+        <where>
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            and state='已发布'
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: cloud-event-file
+  config:
+    import: nacos:localhost:8848
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        file-extension: yml
+        group: DEFAULT_GROUP
+server:
+  port: 8084

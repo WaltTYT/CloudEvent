@@ -65,6 +65,11 @@ const previewVisible = ref(false)
 const previewArticle = ref(null)
 const previewLoading = ref(false)
 
+const formatTime = (time) => {
+  if (!time) return '—'
+  return time.replace('T', ' ').substring(0, 19)
+}
+
 const handlePreview = async (id) => {
   previewLoading.value = true
   try {
@@ -126,7 +131,11 @@ onMounted(() => {
             <el-tag :type="row.state === '已发布' ? 'success' : 'info'">{{ row.state }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180" />
+        <el-table-column prop="createTime" label="创建时间" width="180">
+          <template #default="{ row }">
+            {{ formatTime(row.createTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="handlePreview(row.id)">预览</el-button>
@@ -158,7 +167,7 @@ onMounted(() => {
         </div>
         <img v-if="previewArticle?.coverImg" :src="previewArticle.coverImg" class="preview-cover" @error="$event.target.style.display='none'" />
         <div class="preview-content">{{ previewArticle?.content }}</div>
-        <div class="preview-time">创建时间：{{ previewArticle?.createTime }}</div>
+        <div class="preview-time">创建时间：{{ formatTime(previewArticle?.createTime) }}</div>
       </div>
     </el-dialog>
   </div>

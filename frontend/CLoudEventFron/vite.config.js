@@ -17,11 +17,12 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+    port: 5173,
     proxy: {
-      '/user': 'http://localhost:8081',
-      '/category': 'http://localhost:8081',
-      '/article': 'http://localhost:8081',
-      '/upload': 'http://localhost:8081',
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
     }
   }
 })

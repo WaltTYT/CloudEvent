@@ -24,6 +24,11 @@ const handlePreview = async (id) => {
   }
 }
 
+const formatTime = (time) => {
+  if (!time) return '—'
+  return time.replace('T', ' ').substring(0, 19)
+}
+
 const fetchStats = async () => {
   const [articleRes, categoryRes, publishedRes] = await Promise.all([
     listArticle({ pageNum: 1, pageSize: 1 }),
@@ -77,9 +82,13 @@ onMounted(fetchStats)
       <template #header>看一看</template>
       <el-table :data="publishedArticles" stripe empty-text="暂无已发布文章">
         <el-table-column prop="title" label="标题" min-width="200" />
-        <el-table-column prop="authorName" label="作者" width="100" />
+        <el-table-column prop="authorName" label="作者" width="150" />
         <el-table-column prop="categoryName" label="分类" width="120" />
-        <el-table-column prop="createTime" label="发布时间" width="180" />
+        <el-table-column prop="createTime" label="发布时间" width="180">
+          <template #default="{ row }">
+            {{ formatTime(row.createTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="80">
           <template #default="{ row }">
             <el-button type="primary" link @click="handlePreview(row.id)">查看</el-button>
@@ -98,7 +107,7 @@ onMounted(fetchStats)
         </div>
         <img v-if="previewArticle?.coverImg" :src="previewArticle.coverImg" class="preview-cover" @error="$event.target.style.display='none'" />
         <div class="preview-content">{{ previewArticle?.content }}</div>
-        <div class="preview-time">发布时间：{{ previewArticle?.createTime }}</div>
+        <div class="preview-time">发布时间：{{ formatTime(previewArticle?.createTime) }}</div>
       </div>
     </el-dialog>
   </div>

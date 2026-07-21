@@ -1,0 +1,55 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: cloud-event-gateway
+  config:
+    import: optional:nacos:localhost:8848
+  main:
+    web-application-type: reactive
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        file-extension: yml
+        group: DEFAULT_GROUP
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: lb://cloud-event-user
+              predicates:
+                - Path=/api/user/**
+              filters:
+                - StripPrefix=1
+            - id: article-service
+              uri: lb://cloud-event-article
+              predicates:
+                - Path=/api/article/**
+              filters:
+                - StripPrefix=1
+            - id: category-service
+              uri: lb://cloud-event-category
+              predicates:
+                - Path=/api/category/**
+              filters:
+                - StripPrefix=1
+            - id: file-service
+              uri: lb://cloud-event-file
+              predicates:
+                - Path=/api/upload/**
+              filters:
+                - StripPrefix=1
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOriginPatterns: "*"
+                allowedMethods: "*"
+                allowedHeaders: "*"
+                allowCredentials: true
