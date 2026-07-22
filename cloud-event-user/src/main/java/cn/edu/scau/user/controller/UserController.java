@@ -2,6 +2,7 @@ package cn.edu.scau.user.controller;
 
 import cn.edu.scau.pojo.Result;
 import cn.edu.scau.pojo.User;
+import cn.edu.scau.user.service.UserMessageService;
 import cn.edu.scau.user.service.UserService;
 import cn.edu.scau.utils.JwtUtil;
 import cn.edu.scau.utils.Md5Util;
@@ -26,6 +27,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private UserMessageService userMessageService;
 
     @PostMapping("/register")
     public Result register(@Pattern(regexp = "^\\S{5,16}$") String username,
@@ -33,6 +36,9 @@ public class UserController {
         User u = userService.findByUsername(username);
         if (u == null) {
             userService.register(username, password);
+            // 异步发送用户注册日志消息
+            User user = userService.findByUsername(username);
+            userMessageService.sendUserLog(user, "register");
             return Result.success();
         } else {
             return Result.error("用户已存在");
@@ -52,6 +58,8 @@ public class UserController {
             claims.put("username", u.getUsername());
             String token = JwtUtil.getToken(claims);
             stringRedisTemplate.opsForValue().set(token, token, 1, TimeUnit.HOURS);
+            // 异步发送用户登录日志消息
+            userMessageService.sendUserLog(u, "login");
             return Result.success(token);
         }
         return Result.error("密码错误");

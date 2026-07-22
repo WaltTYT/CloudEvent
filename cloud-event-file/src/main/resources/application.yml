@@ -3,6 +3,12 @@ spring:
     name: cloud-event-file
   config:
     import: nacos:localhost:8848
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
   cloud:
     nacos:
       discovery:

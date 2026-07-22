@@ -8,6 +8,12 @@ spring:
     import: optional:nacos:localhost:8848
   main:
     web-application-type: reactive
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
   cloud:
     nacos:
       discovery:

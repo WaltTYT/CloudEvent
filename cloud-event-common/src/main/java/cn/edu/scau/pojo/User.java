@@ -8,11 +8,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @JsonPropertyOrder({ "id", "username", "nickname", "email", "userPic", "createTime", "updateTime" })
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     @NotNull
     private Integer id;
     private String username;

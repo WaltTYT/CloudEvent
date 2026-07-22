@@ -3,6 +3,7 @@ package cn.edu.scau.article.service.impl;
 import cn.edu.scau.article.feign.CategoryFeignClient;
 import cn.edu.scau.article.feign.UserFeignClient;
 import cn.edu.scau.article.mapper.ArticleMapper;
+import cn.edu.scau.article.service.ArticleMessageService;
 import cn.edu.scau.article.service.ArticleService;
 import cn.edu.scau.pojo.Article;
 import cn.edu.scau.pojo.Category;
@@ -30,6 +31,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired(required = false)
     private UserFeignClient userFeignClient;
 
+    @Autowired
+    private ArticleMessageService articleMessageService;
+
     @Override
     public void add(Article article) {
         article.setUpdateTime(LocalDateTime.now());
@@ -38,6 +42,8 @@ public class ArticleServiceImpl implements ArticleService {
         Integer userId = (Integer) map.get("id");
         article.setCreateUser(userId);
         articleMapper.add(article);
+        // 异步发送文章发布消息
+        articleMessageService.sendArticlePublish(article);
     }
 
     @Override
@@ -115,10 +121,17 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void updateState(Integer id, String state) {
         articleMapper.updateState(id, state);
+        // 异步发送文章操作日志消息
+        Article article = articleMapper.findById(id);
+        articleMessageService.sendArticleLog(article, "updateState");
     }
 
     @Override
     public void deleteById(Integer id) {
+        // 删除前先查询文章信息，用于发送日志消息
+        Article article = articleMapper.findById(id);
         articleMapper.deleteById(id);
+        // 异步发送文章操作日志消息
+        articleMessageService.sendArticleLog(article, "delete");
     }
 }
