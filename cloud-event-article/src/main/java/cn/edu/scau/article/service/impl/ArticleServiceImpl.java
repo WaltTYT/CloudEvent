@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 文章业务服务实现类
+ * 实现文章的增删改查、分页查询、状态管理以及远程调用填充分类/作者信息
+ */
 @Service
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
@@ -34,6 +38,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMessageService articleMessageService;
 
+    /**
+     * 新增文章，设置创建时间/更新时间/创建用户，并异步发送发布消息
+     */
     @Override
     public void add(Article article) {
         article.setUpdateTime(LocalDateTime.now());
@@ -46,6 +53,9 @@ public class ArticleServiceImpl implements ArticleService {
         articleMessageService.sendArticlePublish(article);
     }
 
+    /**
+     * 分页查询当前用户的文章列表（管理端）
+     */
     @Override
     public PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
         PageBean<Article> pb = new PageBean<>();
@@ -59,6 +69,9 @@ public class ArticleServiceImpl implements ArticleService {
         return pb;
     }
 
+    /**
+     * 分页查询已发布文章列表（前台），并远程调用填充分类名称和作者名称
+     */
     @Override
     public PageBean<Article> listPublished(Integer pageNum, Integer pageSize, Integer categoryId) {
         PageBean<Article> pb = new PageBean<>();
@@ -99,6 +112,9 @@ public class ArticleServiceImpl implements ArticleService {
         return pb;
     }
 
+    /**
+     * 根据ID查询文章详情，并远程调用填充分类名称
+     */
     @Override
     public Article findById(Integer id) {
         Article article = articleMapper.findById(id);
@@ -118,6 +134,9 @@ public class ArticleServiceImpl implements ArticleService {
         return article;
     }
 
+    /**
+     * 更新文章状态，并异步发送操作日志消息
+     */
     @Override
     public void updateState(Integer id, String state) {
         articleMapper.updateState(id, state);
@@ -126,6 +145,9 @@ public class ArticleServiceImpl implements ArticleService {
         articleMessageService.sendArticleLog(article, "updateState");
     }
 
+    /**
+     * 根据ID删除文章，删除前查询文章信息用于发送操作日志消息
+     */
     @Override
     public void deleteById(Integer id) {
         // 删除前先查询文章信息，用于发送日志消息

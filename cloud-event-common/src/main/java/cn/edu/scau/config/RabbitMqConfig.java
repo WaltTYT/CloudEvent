@@ -1,6 +1,7 @@
 package cn.edu.scau.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +21,16 @@ public class RabbitMqConfig {
     public static final String USER_EXCHANGE = "user-exchange";
     public static final String USER_LOG_QUEUE = "user-log-queue";
     public static final String ROUTING_KEY_USER_LOG = "user.log";
+
+    /**
+     * 配置消息转换器，允许反序列化白名单（包含 JDK 系统类）
+     */
+    @Bean
+    public SimpleMessageConverter messageConverter() {
+        SimpleMessageConverter converter = new SimpleMessageConverter();
+        converter.setAllowedListPatterns(java.util.List.of("cn.edu.scau.**", "java.lang.**", "java.time.**", "java.util.**"));
+        return converter;
+    }
 
     @Bean
     public DirectExchange articleExchange() {
